@@ -20,6 +20,7 @@ public final class Constants {
     public static final int FRONTLEFT = 4;
     public static final int BACKRIGHT = 2;
     public static final int BACKLEFT = 3;
-
+    public static final int LEFTFLY = 5;
+    public static final int RIGHTFLY = 6;
     public static final int CONTROLLER = 0;
 }

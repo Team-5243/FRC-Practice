@@ -30,13 +30,24 @@ public class DriveSubsystem extends SubsystemBase {
     backLeft.follow(frontLeft);
   }
 
-  public void setMotors(double right, double left) {
+  public void setMotors(double left, double right) {
     frontLeft.set(left);
     frontRight.set(right);
     backLeft.set(left);
     backRight.set(right);
   }
 
+  public void stopMotors() 
+  {
+    setMotors(0, 0);
+  }
+
+  /*
+  public void forward(double power) {
+    setMotors(power, power);
+  }
+  */
+  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

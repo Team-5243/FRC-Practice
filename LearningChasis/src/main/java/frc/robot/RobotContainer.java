@@ -7,14 +7,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.DriveCommand;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.TankDriveCommand;
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -27,14 +22,15 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-
   private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
+  private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
 
   private final XboxController m_controller = new XboxController(Constants.CONTROLLER);
 
   private final TankDriveCommand m_tankDriveCommand = new TankDriveCommand(m_driveSubsystem, m_controller);
-
   private final DriveCommand m_driveCommand = new DriveCommand(m_driveSubsystem, m_controller);
+  private final FlywheelCommand m_flywheelCommand = new FlywheelCommand(m_flywheelSubsystem, m_controller);
+  
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -74,5 +70,10 @@ public class RobotContainer {
   public DriveCommand getDriveCommand() {
     return m_driveCommand;
   }
-  
+  public FlywheelSubsystem getFlywheelSubsystem() {
+    return m_flywheelSubsystem;
+  }
+  public FlywheelCommand getFlywheelCommand() {
+    return m_flywheelCommand;
+  }
 }

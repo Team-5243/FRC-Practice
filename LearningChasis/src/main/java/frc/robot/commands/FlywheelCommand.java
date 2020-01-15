@@ -7,22 +7,18 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.FlywheelSubsystem;
+import edu.wpi.first.wpilibj.XboxController;
 
-public class DriveCommand extends CommandBase {
-  final private DriveSubsystem m_driveSubsystem;
+public class FlywheelCommand extends CommandBase {
+  
+  final private FlywheelSubsystem m_flywheelSubsystem;
   final private XboxController m_xboxController;
 
-  /**
-   * Creates a new DriveCommand.
-   */
-  public DriveCommand(DriveSubsystem subsystem, XboxController ankle){
-    m_driveSubsystem = subsystem;
-    m_xboxController = ankle;
+  public FlywheelCommand(FlywheelSubsystem subsystem, XboxController controller) {
+    m_flywheelSubsystem = subsystem;
+    m_xboxController = controller;    
   }
 
   // Called when the command is initially scheduled.
@@ -33,13 +29,12 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveSubsystem.setMotors(m_xboxController.getY(Hand.kLeft), m_xboxController.getY(Hand.kRight));
+    m_flywheelSubsystem.setFlywheels(m_xboxController.getAButton());
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_driveSubsystem.stopMotors();
   }
 
   // Returns true when the command should end.
