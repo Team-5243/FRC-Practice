@@ -34,9 +34,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.getDriveSubsystem(), m_robotContainer.getDriveCommand());
-    CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.getFlywheelSubsystem(), m_robotContainer.getFlywheelCommand());
-    
+    CommandScheduler.getInstance().setDefaultCommand(m_robotContainer.getDriveSubsystem(), m_robotContainer.getDriveCommand());    
 
     
   }
@@ -73,7 +71,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = null;
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

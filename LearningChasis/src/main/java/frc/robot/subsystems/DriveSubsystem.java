@@ -7,49 +7,77 @@
 
 package frc.robot.subsystems;
 
+import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class DriveSubsystem extends SubsystemBase {
   
   CANSparkMax frontLeft, frontRight, backLeft, backRight;
-  
-  /**
-   * Creates a new DriveSubsystem.
-   */
-  public DriveSubsystem() {
-    frontLeft = new CANSparkMax(Constants.FRONTLEFT, MotorType.kBrushless);
-    frontRight = new CANSparkMax(Constants.FRONTRIGHT, MotorType.kBrushless);
-    backLeft = new CANSparkMax(Constants.BACKLEFT, MotorType.kBrushless);
-    backRight = new CANSparkMax(Constants.BACKRIGHT, MotorType.kBrushless);
+  AHRS gyro;
+  Pose2d estimatedPose;
+  Pose2d drivetrainPower;
 
-    backRight.follow(frontRight);
+  /**
+   * Creates a new chassis.
+   */
+  public DriveSubsystem(RobotContainer robotContainer) {
+    frontLeft = new CANSparkMax(Constants.FRONT_LEFT, MotorType.kBrushless);
+    backLeft = new CANSparkMax(Constants.BACK_LEFT, MotorType.kBrushless);
+    frontRight = new CANSparkMax(Constants.FRONT_RIGHT, MotorType.kBrushless);
+    backRight = new CANSparkMax(Constants.BACK_RIGHT, MotorType.kBrushless);
+
     backLeft.follow(frontLeft);
+    backRight.follow(frontRight);
+
+    gyro = robotContainer.getGyro();
+    estimatedPose = new Pose2d();
+    drivetrainPower = new Pose2d();
   }
 
-  public void setMotors(double left, double right) {
+  public AHRS getGyro() {
+    return gyro;
+  }
+
+  public Pose2d getPose() {
+    return estimatedPose;
+  }
+
+  public void setMotors(double right, double left) {
     frontLeft.set(left);
     frontRight.set(right);
-    backLeft.set(left);
-    backRight.set(right);
   }
 
-  public void stopMotors() 
-  {
+  public void steerDrive(double drivePower, double steerPower) {
+    setDrivetrainPower(new Pose2d(new Translation2d(drivePower, 0d), new Rotation2d(steerPower)));
+    //frontLeft.set(drivePower - steerPower);
+    //frontRight.set(drivePower + steerPower);
+  }
+
+  public void stopMotors() {
     setMotors(0, 0);
   }
 
-  /*
-  public void forward(double power) {
-    setMotors(power, power);
+  public Pose2d getDrivetrainPower() {
+    return drivetrainPower;
   }
-  */
-  
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+
+  public void setDrivetrainPower(Pose2d power) {
+    drivetrainPower = power;
+  }
+
+  public double getDrivePower() {
+    return drivetrainPower.getTranslation().getX();
+  }
+
+  public double getSteerPower() {
+    return drivetrainPower.getRotation().getRadians();
   }
 }

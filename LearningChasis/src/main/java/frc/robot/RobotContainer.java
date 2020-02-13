@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -19,17 +21,13 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final AHRS m_gyro = new AHRS();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem();
-  private final FlywheelSubsystem m_flywheelSubsystem = new FlywheelSubsystem();
+  private final DriveSubsystem m_driveSubsystem = new DriveSubsystem(this);
 
   private final XboxController m_controller = new XboxController(Constants.CONTROLLER);
 
-  private final TankDriveCommand m_tankDriveCommand = new TankDriveCommand(m_driveSubsystem, m_controller);
   private final DriveCommand m_driveCommand = new DriveCommand(m_driveSubsystem, m_controller);
-  private final FlywheelCommand m_flywheelCommand = new FlywheelCommand(m_flywheelSubsystem, m_controller);
   
 
   /**
@@ -49,15 +47,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
   }
 
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+  public AHRS getGyro() {
+    return(m_gyro);
   }
 
   public XboxController getController() {
@@ -69,11 +60,5 @@ public class RobotContainer {
   }
   public DriveCommand getDriveCommand() {
     return m_driveCommand;
-  }
-  public FlywheelSubsystem getFlywheelSubsystem() {
-    return m_flywheelSubsystem;
-  }
-  public FlywheelCommand getFlywheelCommand() {
-    return m_flywheelCommand;
   }
 }

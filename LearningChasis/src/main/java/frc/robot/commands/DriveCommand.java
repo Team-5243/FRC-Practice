@@ -20,9 +20,9 @@ public class DriveCommand extends CommandBase {
   /**
    * Creates a new DriveCommand.
    */
-  public DriveCommand(DriveSubsystem subsystem, XboxController ankle){
+  public DriveCommand(DriveSubsystem subsystem, XboxController controller){
     m_driveSubsystem = subsystem;
-    m_xboxController = ankle;
+    m_xboxController = controller;
   }
 
   // Called when the command is initially scheduled.

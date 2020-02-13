@@ -16,11 +16,26 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final int FRONTRIGHT = 1;
-    public static final int FRONTLEFT = 4;
-    public static final int BACKRIGHT = 2;
-    public static final int BACKLEFT = 3;
-    public static final int LEFTFLY = 5;
-    public static final int RIGHTFLY = 6;
+    public static final double GRAVITATIONAL_ACCELERATION = 9.81d; //m/s^2
+
+    public static final int NEO_ENCODER_PULSES_PER_REVOLUTION = 42;
+
+    public static final double DRIVETRAIN_GEAR_RATIO = 10.75d;
+    public static final double DRIVE_WHEEL_CIRCUMFERENCE = 6d * Math.PI; //in
+    public static final double DRIVE_WHEEL_SEPARATION_DISTANCE = 22.375d; //in
+
+    //---------------------------------------------------------------
+    // PORTS
+    //---------------------------------------------------------------
     public static final int CONTROLLER = 0;
+
+    public static final int FRONT_RIGHT = 1;
+    public static final int FRONT_LEFT = 2;
+    public static final int BACK_LEFT = 3;
+    public static final int BACK_RIGHT = 4;
+
+    public static final double kP_DRIVE_STRAIGHT = 1 / 30d; //motor power / degree
+
+    public static final double kP_TURN = 1 / 30d; //motor power / degree
+
 }
