@@ -23,29 +23,28 @@ public class TurnPIDCommand extends PIDCommand {
   double m_desiredHeading, m_initialHeading;
   boolean m_relative;
 
-
   public TurnPIDCommand(DriveSubsystem driveSubsystem, double desiredHeading, double initialHeading, boolean relative) {
     super(
         // The controller that the command will use
         new PIDController(Constants.kP_TURN, 0, 0),
         // This should return the measurement
-        driveSubsystem.getGyro()::getYaw,
+        driveSubsystem.getGyro()::getAngle,
         // This should return the setpoint (can also be a constant)
         () -> relative ? desiredHeading + initialHeading : desiredHeading,
         // This uses the output
-        output -> driveSubsystem.steerDrive(0d, output));
+        output -> driveSubsystem.steerDrive(0d, output), 
+        driveSubsystem);
     
     m_driveSubsystem = driveSubsystem;
     m_desiredHeading = desiredHeading;
     m_initialHeading = initialHeading;
     m_relative = relative;
-    addRequirements(driveSubsystem);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_relative ? Math.abs((m_desiredHeading+m_initialHeading) - m_driveSubsystem.getGyro().getYaw()) <= 1 :
-      (Math.abs(m_desiredHeading - m_driveSubsystem.getGyro().getYaw()) <= 1);
+    return m_relative ? Math.abs((m_desiredHeading+m_initialHeading) - m_driveSubsystem.getGyro().getAngle()) <= 1 :
+      (Math.abs(m_desiredHeading - m_driveSubsystem.getGyro().getAngle()) <= 1);
   }
 }

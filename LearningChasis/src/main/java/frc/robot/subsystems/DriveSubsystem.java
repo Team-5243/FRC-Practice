@@ -19,11 +19,11 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class DriveSubsystem extends SubsystemBase {
-  
   CANSparkMax frontLeft, frontRight, backLeft, backRight;
   AHRS gyro;
   Pose2d estimatedPose;
   Pose2d drivetrainPower;
+  double lastPower;
 
   /**
    * Creates a new chassis.
@@ -40,6 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
     gyro = robotContainer.getGyro();
     estimatedPose = new Pose2d();
     drivetrainPower = new Pose2d();
+    lastPower = 0d;
   }
 
   public AHRS getGyro() {
@@ -52,17 +53,29 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void setMotors(double right, double left) {
     frontLeft.set(left);
-    frontRight.set(right);
+    frontRight.set(-right);
   }
 
   public void steerDrive(double drivePower, double steerPower) {
-    setDrivetrainPower(new Pose2d(new Translation2d(drivePower, 0d), new Rotation2d(steerPower)));
-    //frontLeft.set(drivePower - steerPower);
-    //frontRight.set(drivePower + steerPower);
+    //setDrivetrainPower(new Pose2d(new Translation2d(drivePower, 0d), new Rotation2d(steerPower)));
+    double normalization = Math.hypot(drivePower, steerPower) < 0.05 ? 0d : 1 / Math.hypot(drivePower, steerPower); // Math.sqrt(2);
+    double power = (Math.abs(drivePower) + Math.abs(steerPower)) / 2d;
+    double dt = 1 / 200d;
+    double acceleration = (power - lastPower) / dt;
+    if(acceleration > Constants.MAX_DRIVE_ACCELERATION_CAP) {
+      power = Constants.MAX_DRIVE_ACCELERATION_CAP * dt + lastPower;
+    } else if(acceleration < -Constants.MAX_DRIVE_ACCELERATION_CAP) {
+      power = -Constants.MAX_DRIVE_ACCELERATION_CAP * dt + lastPower;
+    }
+
+    lastPower = power;
+
+    frontLeft.set((drivePower + steerPower) * normalization * power);
+    frontRight.set(-(drivePower - steerPower) * normalization * power);
   }
 
   public void stopMotors() {
-    setMotors(0, 0);
+    steerDrive(0d, 0d);
   }
 
   public Pose2d getDrivetrainPower() {
@@ -79,5 +92,20 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getSteerPower() {
     return drivetrainPower.getRotation().getRadians();
+  }
+
+  public double getLeftDisplacement() {
+    return frontLeft.getEncoder().getPosition() / Constants.NEO_ENCODER_PULSES_PER_REVOLUTION*
+      (Constants.DRIVE_WHEEL_CIRCUMFERENCE * Constants.DRIVETRAIN_GEAR_RATIO);
+  }
+
+  @Override
+  public void periodic() {
+    double leftVelocity = (frontLeft.getEncoder().getVelocity()/Constants.NEO_ENCODER_PULSES_PER_REVOLUTION)*
+      (Constants.DRIVE_WHEEL_CIRCUMFERENCE * Constants.DRIVETRAIN_GEAR_RATIO);
+    double rightVelocity = (frontRight.getEncoder().getVelocity()/Constants.NEO_ENCODER_PULSES_PER_REVOLUTION)*
+      (Constants.DRIVE_WHEEL_CIRCUMFERENCE * Constants.DRIVETRAIN_GEAR_RATIO);
+    Pose2d negativePoseChange = new Pose2d(new Translation2d(-(leftVelocity + rightVelocity) / 2d, 0d), new Rotation2d((leftVelocity - rightVelocity) / (2d * Constants.DRIVE_WHEEL_SEPARATION_DISTANCE)));
+    estimatedPose.minus(negativePoseChange);
   }
 }

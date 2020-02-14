@@ -29,13 +29,17 @@ public final class Constants {
     //---------------------------------------------------------------
     public static final int CONTROLLER = 0;
 
-    public static final int FRONT_RIGHT = 1;
-    public static final int FRONT_LEFT = 2;
+    public static final int FRONT_RIGHT = 2;
+    public static final int FRONT_LEFT = 1;
     public static final int BACK_LEFT = 3;
     public static final int BACK_RIGHT = 4;
 
-    public static final double kP_DRIVE_STRAIGHT = 1 / 30d; //motor power / degree
+    public static final double MAX_DRIVE_ACCELERATION_CAP = 2d; //motor power / s
 
-    public static final double kP_TURN = 1 / 30d; //motor power / degree
+    public static final double kP_DRIVE_STRAIGHT = 1 / 15d; //motor power / degree
 
+    public static final double kS_TURN = 0d;
+    public static final double kP_TURN = 1 / 45d; //1 / 45d; //motor power / degree
+    public static final double kI_TURN = 0d;
+    public static final double kD_TURN = 0.001d;
 }

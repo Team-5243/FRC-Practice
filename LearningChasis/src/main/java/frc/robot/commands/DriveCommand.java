@@ -9,7 +9,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
@@ -23,6 +22,7 @@ public class DriveCommand extends CommandBase {
   public DriveCommand(DriveSubsystem subsystem, XboxController controller){
     m_driveSubsystem = subsystem;
     m_xboxController = controller;
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -33,7 +33,7 @@ public class DriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveSubsystem.setMotors(m_xboxController.getY(Hand.kLeft), m_xboxController.getY(Hand.kRight));
+    m_driveSubsystem.steerDrive(-m_xboxController.getY(Hand.kLeft), m_xboxController.getX(Hand.kRight));
   }
 
   // Called once the command ends or is interrupted.
